@@ -1,0 +1,17 @@
+--Other way to do this
+
+DECLARE @File  varchar(300) = 'c:\Temp\out.txt'
+DECLARE @Text  varchar(8000) = 'Sample text'
+DECLARE @OLE            INT 
+DECLARE @FileID         INT
+
+EXECUTE sp_OACreate 'Scripting.FileSystemObject', @OLE OUT 
+EXECUTE sp_OAMethod @OLE, 'OpenTextFile', @FileID OUT, @File, 8, 1 
+EXECUTE sp_OAMethod @FileID, 'WriteLine', Null, @Text
+EXECUTE sp_OADestroy @FileID 
+EXECUTE sp_OADestroy @OLE 
+--Check for errors using SP result
+
+EXECUTE @result = sp_OAMethod @OLE, 'OpenTextFile', @FileID OUT, @File, 8, 1
+if @result<>0 GOTO ON_ERROR
+Haven't found the way to read error message though
